@@ -56,6 +56,8 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
 
     if button_clicked and not stats.game_active:
         ai_settings.initialize_dynamic_settings()
+        pygame.mixer.music.load('sounds/bg_music.ogg')
+        pygame.mixer.music.play(-1)
         # Hide the mouse cursor.
         pygame.mouse.set_visible(False)
         # Reset the game statistics.
@@ -92,8 +94,11 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, 
     # if so, get rid of the bullet and alien
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
     if collisions:
-        pygame.mixer.music.load('alien_explode.ogg')
-        pygame.mixer.music.play(0)
+        alien_death = pygame.mixer.Sound("sounds/alien_explode.ogg")
+        pygame.mixer.Sound.play(alien_death)
+
+        # pygame.mixer.music.load('alien_explode.ogg')
+        # pygame.mixer.music.play(0)
         for aliens in collisions.values():
             stats.score += ai_settings.alien_points * len(aliens)
             sb.prep_score()
@@ -157,8 +162,10 @@ def fire_bullet(ai_settings, screen, ship, bullets):
     # fire a bullet if limit not reached
     # create a new bullet and add it to the bullets group
     if len(bullets) < ai_settings.bullets_allowed:
-        pygame.mixer.music.load('fire_sound.ogg')
-        pygame.mixer.music.play(0)
+        bullet_fire = pygame.mixer.Sound("sounds/fire_sound.ogg")
+        pygame.mixer.Sound.play(bullet_fire)
+        # pygame.mixer.music.load('fire_sound.ogg')
+        # pygame.mixer.music.play(0)
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
 
@@ -181,8 +188,10 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets):
     # respond to ship being hit by alien
 
     if stats.ships_left > 0:
-        pygame.mixer.music.load('ship_explode.ogg')
-        pygame.mixer.music.play(0)
+        ship_explosion = pygame.mixer.Sound("sounds/ship_explode.ogg")
+        pygame.mixer.Sound.play(ship_explosion)
+        # pygame.mixer.music.load('ship_explode.ogg')
+        # pygame.mixer.music.play(0)
         # decrement ships_left
         stats.ships_left -= 1
 
