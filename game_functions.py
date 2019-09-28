@@ -139,10 +139,10 @@ def create_fleet(ai_settings, screen, ship, aliens):
     alien = Alien(ai_settings, screen)
 
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
-    number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
+    # number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
 
     # create the first row of aliens
-    for row_number in range(number_rows):
+    for row_number in range(2):
         for alien_number in range(number_aliens_x):
             # create an alien and place it in the row
             create_alien(ai_settings, screen, aliens, alien_number, row_number)
@@ -154,8 +154,9 @@ def create_alien(ai_settings, screen, aliens, alien_number, row_number):
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
     alien.rect.x = alien.x
-    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * (row_number)
     aliens.add(alien)
+    # do the same for alien b but add 2
 
 
 def fire_bullet(ai_settings, screen, ship, bullets):
@@ -179,7 +180,7 @@ def get_number_aliens_x(ai_settings, alien_width):
 
 def get_number_rows(ai_settings, ship_height, alien_height):
     # determine the number of rows of aliens that fit on the screen
-    available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
+    available_space_y = (ai_settings.screen_height - (10 * alien_height) - ship_height)
     number_rows = int(available_space_y / (2 * alien_height))
     return number_rows
 
