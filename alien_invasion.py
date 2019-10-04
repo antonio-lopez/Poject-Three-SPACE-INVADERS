@@ -1,12 +1,13 @@
 import pygame
+import sys
 from pygame.sprite import Group
 from settings import Settings
 from ship import Ship
-
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
 import game_functions as gf
+from high_score import HighScore
 
 
 def run_game():
@@ -15,8 +16,41 @@ def run_game():
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     pygame.display.set_caption("Alien Invasion")
-    play_button = Button(ai_settings, screen, "Play")
 
+    screen.fill([255, 255, 255])
+    test = pygame.image.load("images/startup_image.png")
+    screen.blit(test, [0, 0])
+    pygame.display.flip()
+
+    high_score = HighScore(screen)
+
+    endintro = False
+    openhighscore = False
+    while endintro == False:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    endintro = True
+                elif event.key == pygame.K_s:
+                    endintro = True
+                    openhighscore = True
+
+    if openhighscore:
+        high_score.scores()
+
+        pygame.display.flip()
+
+    while openhighscore == True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    openhighscore = False
+
+    play_button = Button(ai_settings, screen, "Play")
     # create an instance to store game statistics
     stats = GameStats(ai_settings)
     # Create an instance to store game statistics and create a scoreboard.
@@ -35,7 +69,6 @@ def run_game():
     while True:
         # watch for keyboard and mouse events
         gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets)
-
         if stats.game_active:
             ship.update()
 
@@ -43,7 +76,6 @@ def run_game():
             # make the most recently drawn screen visible
             gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets)
             gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets)
-
         gf.update_screen(ai_settings, screen, ship, stats, sb, aliens, bullets, play_button)
 
 
