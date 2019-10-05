@@ -10,6 +10,7 @@ import game_functions as gf
 from high_score import HighScore
 
 
+
 def run_game():
     """initialize game and create a screen object"""
     pygame.init()
@@ -39,7 +40,6 @@ def run_game():
 
     if openhighscore:
         high_score.scores()
-
         pygame.display.flip()
 
     while openhighscore == True:
