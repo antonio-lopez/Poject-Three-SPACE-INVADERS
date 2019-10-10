@@ -75,7 +75,8 @@ def run_game():
     # start the main loop for the game
     while True:
         # watch for keyboard and mouse events
-        gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets)
+        gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c,
+                        bullets, alien_bullets)
         if stats.game_active:
             ship.update()
             gf.random_ufo(ai_settings, screen, ufos)

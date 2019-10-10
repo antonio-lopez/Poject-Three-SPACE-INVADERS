@@ -19,7 +19,7 @@ class Settings:
 
         # bullet settings
         self.bullet_speed_factor = 3
-        self.alien_bullet_speed_factor = .5
+        self.alien_bullet_speed_factor = .2
         # self.bullet_width = 3
         self.bullet_width = 10
         self.bullet_height = 15

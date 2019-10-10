@@ -28,21 +28,21 @@ def alien_c_explosion(aliens_c):
 
 def alien_shooting(ai_settings, screen, ship, alien_bullets, aliens):
     alien_bullets.update()
+    i = 0
     # Get rid of bullets that have disappeared.
     for alien in aliens.sprites():
         i = alien.rect.y
 
-    if len(alien_bullets) < ai_settings.bullets_allowed:
+    # if len(alien_bullets) < ai_settings.bullets_allowed:
         bullet_sound = pygame.mixer.Sound("sounds/fire_sound.ogg")
         pygame.mixer.Sound.play(bullet_sound)
         new_bullet = AlienBullet(ai_settings, screen, ship, i)
         alien_bullets.add(new_bullet)
 
 
-def check_key_down_events(event, ai_settings, screen, ship, bullets):
+def check_key_down_events(event, ai_settings, screen, ship, bullets, alien_bullets, aliens):
     """respond to key presses"""
     if event.key == pygame.K_RIGHT:
-        # move the ship to the right conticnuously
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
         ship.moving_left = True
@@ -51,6 +51,8 @@ def check_key_down_events(event, ai_settings, screen, ship, bullets):
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
         sys.exit()
+    elif event.key == pygame.K_r:
+        alien_shooting(ai_settings, screen, ship, alien_bullets, aliens)
 
 
 def check_key_up_events(event, ship):
@@ -80,7 +82,7 @@ def check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, aliens_b, 
             break
 
 
-def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets):
+def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets, alien_bullets):
     """respond to key presses and mouse events"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -90,12 +92,13 @@ def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, alie
             check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c,
                               bullets, mouse_x, mouse_y)
         elif event.type == pygame.KEYDOWN:
-            check_key_down_events(event, ai_settings, screen, ship, bullets)
+            check_key_down_events(event, ai_settings, screen, ship, bullets, alien_bullets, aliens)
         elif event.type == pygame.KEYUP:
             check_key_up_events(event, ship)
 
 
-def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets, mouse_x, mouse_y):
+def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets,
+                      mouse_x, mouse_y):
     # start a new game when player clicks play
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 
@@ -238,6 +241,7 @@ def check_alien_bullet_ship_collisions(si_settings, screen, stats, sb, ship, ali
             alien_bullets.remove(bullet)
         alien_bullets.update()
         ship_hit(si_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c, bullets)
+        stats.level -= 1
 
 
 def check_high_score(stats, sb):
@@ -354,7 +358,7 @@ def random_ufo(ai_settings, screen, ufos):
 
 
 def random_alien_shoot(ai_settings, screen, ship, alien_bullets, aliens):
-    if random.randint(1, 20) == 10:
+    if random.randint(1, 4000) == 25:
         alien_shooting(ai_settings, screen, ship, alien_bullets, aliens)
 
 
@@ -443,7 +447,8 @@ def update_alien_bullets(si_settings, screen, stats, sb, ship, alien_bullets):
             alien_bullets.remove(bullet)
 
 
-def update_screen(ai_settings, screen, ship, stats, sb, aliens, aliens_b, aliens_c, bullets, play_button, alien_bullets, ufos):
+def update_screen(ai_settings, screen, ship, stats, sb, aliens, aliens_b, aliens_c, bullets, play_button,
+                  alien_bullets, ufos):
     # update images on the screen and flip to the new screen
     # redraw the screen during each pass through the loop
     screen.fill(ai_settings.bg_color)
