@@ -60,23 +60,45 @@ def run_game():
     ship = Ship(ai_settings, screen)
     # make a group to store bullets in
     bullets = Group()
+    alien_bullets = Group()
     aliens = Group()
+    aliens_b = Group()
+    aliens_c = Group()
+    ufos = Group()
 
     # create the fleet of aliens
-    gf.create_fleet(ai_settings, screen, ship, aliens)
+    gf.create_fleet(ai_settings, screen, aliens)
+    gf.create_b_fleet(ai_settings, screen, ship, aliens_b)
+    gf.create_c_fleet(ai_settings, screen, ship, aliens_c)
+    gf.create_ufo(ai_settings, screen, ufos)
 
     # start the main loop for the game
     while True:
         # watch for keyboard and mouse events
-        gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets)
+        gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, aliens_b, aliens_c, bullets)
         if stats.game_active:
             ship.update()
+            gf.random_ufo(ai_settings, screen, ufos)
+            # gf.update_ufo(ufos)
+            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c, bullets)
+            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c, bullets)
+            gf.update_alien_bullets(ai_settings, screen, stats, sb, ship, alien_bullets)
+            gf.random_alien_shoot(ai_settings, screen, ship, alien_bullets, aliens)
+            gf.check_alien_bullet_ship_collisions(ai_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c,
+                                                  bullets, alien_bullets)
+            gf.check_bullet_ufo_collisions(ai_settings, screen, stats, sb, bullets, ufos)
+            if ufos.__len__() > 0:
+                for ufo in ufos.copy():
+                    ufo.move()
+                    if ufo.rect.x > 600:
+                        ufos.remove(ufo)
+                        print("its gone")
 
-            # redraw the screen during each pass through the loop
-            # make the most recently drawn screen visible
-            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets)
-            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets)
-        gf.update_screen(ai_settings, screen, ship, stats, sb, aliens, bullets, play_button)
+        bullets.update()
+        alien_bullets.update()
+
+        gf.update_screen(ai_settings, screen, ship, stats, sb, aliens, aliens_b, aliens_c, bullets,
+                         play_button, alien_bullets, ufos)
 
 
 run_game()

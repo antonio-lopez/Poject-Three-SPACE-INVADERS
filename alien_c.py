@@ -2,16 +2,16 @@ import pygame
 from pygame.sprite import Sprite
 
 
-class Alien(Sprite):
+class AlienC(Sprite):
     # a class to represent a single alien in the fleet
     def __init__(self, ai_settings, screen):
         # initialize the alien and set its starting position
-        super(Alien, self).__init__()
+        super(AlienC, self).__init__()
         self.screen = screen
         self.ai_settings = ai_settings
 
         # load the alien image and set its rect attribute
-        self.image = pygame.image.load('images/enemy1_a.png')
+        self.image = pygame.image.load('images/enemy3_a.png')
         self.rect = self.image.get_rect()
 
         # start each new alien near the top left of the screen
@@ -45,9 +45,9 @@ class Alien(Sprite):
             self.cnt = self.cnt + 1
         elif self.swap and self.cnt == 50:
             self.cnt = 1
-            self.image = pygame.image.load('images/enemy1_b.png')
+            self.image = pygame.image.load('images/enemy3_b.png')
             self.swap = False
         elif not self.swap and self.cnt == 50:
             self.cnt = 1
-            self.image = pygame.image.load('images/enemy1_a.png')
+            self.image = pygame.image.load('images/enemy3_a.png')
             self.swap = True

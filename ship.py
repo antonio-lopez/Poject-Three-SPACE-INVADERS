@@ -13,7 +13,6 @@ class Ship(Sprite):
 
         # load ship image and get its rect
         self.image = pygame.image.load('images/ship.png')
-        # self.image = pygame.image.load('ship.bmp')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
 
