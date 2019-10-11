@@ -7,10 +7,8 @@ from alien_b import AlienB
 from alien_c import AlienC
 from alien_bullet import AlienBullet
 from ufo import UFO
+from high_score import HighScore
 from time import sleep
-from mystery import Mystery
-from explosion import Explosion
-from os import path
 fps = pygame.time.Clock()
 
 """
@@ -28,7 +26,6 @@ def alien_c_explosion(aliens_c):
 
 def alien_shooting(ai_settings, screen, ship, alien_bullets, aliens):
     alien_bullets.update()
-    i = 0
     # Get rid of bullets that have disappeared.
     for alien in aliens.sprites():
         i = alien.rect.y
@@ -161,21 +158,21 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, 
         for aliens in collisions.values():
             stats.score += ai_settings.alien_points * len(aliens)
             sb.prep_score()
-        # check_high_score(stats, sb)
+        check_high_score(stats, sb)
     elif collisions_b:
         alien_death = pygame.mixer.Sound("sounds/alien_explode.ogg")
         pygame.mixer.Sound.play(alien_death)
         for aliens_b in collisions_b.values():
             stats.score += ai_settings.alien_b_points * len(aliens_b)
             sb.prep_score()
-        # check_high_score(stats, sb)
+        check_high_score(stats, sb)
     elif collisions_c:
         alien_death = pygame.mixer.Sound("sounds/alien_explode.ogg")
         pygame.mixer.Sound.play(alien_death)
         for aliens_c in collisions_c.values():
             stats.score += ai_settings.alien_c_points * len(aliens_c)
             sb.prep_score()
-        # check_high_score(stats, sb)
+        check_high_score(stats, sb)
 
     # remove any bullets and aliens that have collided
     if len(aliens) == 0:
@@ -242,6 +239,29 @@ def check_alien_bullet_ship_collisions(si_settings, screen, stats, sb, ship, ali
         alien_bullets.update()
         ship_hit(si_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c, bullets)
         stats.level -= 1
+
+
+def check_bunker_collisions(bullets, alien_bullets, bunkers):
+
+    for bunker in bunkers:
+        for pixel in bunker.bunker:
+            bullet_collisions = shot = pygame.sprite.spritecollideany(pixel, bullets)
+            if bullet_collisions:
+                shot = pygame.sprite.spritecollideany(pixel, bullets)
+                if shot:
+                    for bullet in bullets:
+                        bullets.remove(bullet)
+                    pixel.remove(bunker.bunker)
+
+    for bunker in bunkers:
+        for pixel in bunker.bunker:
+            bullet_collisions = shot = pygame.sprite.spritecollideany(pixel, alien_bullets)
+            if bullet_collisions:
+                shot = pygame.sprite.spritecollideany(pixel, alien_bullets)
+                if shot:
+                    for bullet in alien_bullets:
+                        alien_bullets.remove(bullet)
+                    pixel.remove(bunker.bunker)
 
 
 def check_high_score(stats, sb):
@@ -353,7 +373,7 @@ def get_number_aliens_x(ai_settings, alien_width):
 
 def random_ufo(ai_settings, screen, ufos):
     if ufos.__len__() == 0:
-        if random.randint(1, 20) == 10:         # change for even more random
+        if random.randint(1, 2000) == 10:         # change for even more random
             create_ufo(ai_settings, screen, ufos)
 
 
@@ -405,6 +425,24 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, aliens_b, aliens_c, b
         ship.image = pygame.image.load("images/ship.png")
 
     else:
+        hs = HighScore(screen)
+        if stats.score > hs.get_lowest_score():
+            new_name = hs.get_name()
+            hs.add_score(new_name, stats.score)
+            print(stats.score)
+
+            open_score_window = True
+            hs.scores()
+            pygame.display.flip()
+
+            while open_score_window == True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            open_score_window = False
+
         stats.game_active = False
         pygame.mouse.set_visible(True)
 
@@ -448,7 +486,7 @@ def update_alien_bullets(si_settings, screen, stats, sb, ship, alien_bullets):
 
 
 def update_screen(ai_settings, screen, ship, stats, sb, aliens, aliens_b, aliens_c, bullets, play_button,
-                  alien_bullets, ufos):
+                  alien_bullets, ufos, bunker):
     # update images on the screen and flip to the new screen
     # redraw the screen during each pass through the loop
     screen.fill(ai_settings.bg_color)
@@ -466,6 +504,8 @@ def update_screen(ai_settings, screen, ship, stats, sb, aliens, aliens_b, aliens
 
     # draw the score information
     sb.show_score()
+    for bunk in bunker:
+        bunk.draw_bunker()
 
     # draw the play button if the game is inactive
     if not stats.game_active:

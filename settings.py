@@ -1,6 +1,3 @@
-import pygame
-
-
 class Settings:
     # a class to store all settings for Alien invasion
     def __init__(self):
@@ -15,7 +12,7 @@ class Settings:
 
         # ship settings
         self.ship_speed_factor = 1.5
-        self.ship_limit = 3
+        self.ship_limit = 1
 
         # bullet settings
         self.bullet_speed_factor = 3
@@ -37,8 +34,6 @@ class Settings:
         # How quickly the alien point values increase
         self.score_scale = 1.5
         self.initialize_dynamic_settings()
-
-
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""

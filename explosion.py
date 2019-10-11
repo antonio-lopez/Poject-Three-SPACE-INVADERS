@@ -1,6 +1,5 @@
 import pygame
 from os import path
-from pygame.sprite import Sprite
 
 
 class Explosion(pygame.sprite.Sprite):
