@@ -1,4 +1,6 @@
 # Project Two: Alien Invasions (CS 386-02)
+
+![image](https://github.com/antonio-lopez/Poject-Three-SPACE-INVADERS/blob/master/images/game_screenshot.png)
  
 ## Overview
 
@@ -11,3 +13,7 @@ Space Invaders is a fixed shooter in which the player controls a laser cannon by
 * The player can move the ship right and left using the arrow keys and shoot bullets using the spacebar. 
 * To quit the game while it is active, press "q".
 * You are given the option to play again.
+
+![image](https://github.com/antonio-lopez/Poject-Three-SPACE-INVADERS/blob/master/images/main_screenshot.png)
+
+![image](https://github.com/antonio-lopez/Poject-Three-SPACE-INVADERS/blob/master/images/score_screenshot.png)
